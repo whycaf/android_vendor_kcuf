@@ -27,3 +27,7 @@ PRODUCT_COPY_FILES += \
     vendor/kcuf/prebuilt/common/bin/backuptool_ab.functions:system/bin/backuptool_ab.functions \
     vendor/kcuf/prebuilt/common/bin/backuptool_postinstall.sh:system/bin/backuptool_postinstall.sh
 endif
+
+# Overlays
+DEVICE_PACKAGE_OVERLAYS += \
+    vendor/kcuf/overlay/common
