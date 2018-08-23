@@ -30,4 +30,5 @@ endif
 
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
-    vendor/kcuf/overlay/common
+    vendor/kcuf/overlay/common \
+    vendor/kcuf/overlay/themes
