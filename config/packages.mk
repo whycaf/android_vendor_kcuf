@@ -20,6 +20,7 @@ PRODUCT_PACKAGES += \
     ExactCalculator \
     LatinIME \
     Launcher3QuickStep \
+    MiXplorer \
     messaging \
     Stk
 
