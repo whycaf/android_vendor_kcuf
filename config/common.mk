@@ -32,3 +32,7 @@ endif
 DEVICE_PACKAGE_OVERLAYS += \
     vendor/kcuf/overlay/common \
     vendor/kcuf/overlay/themes
+
+# Apns
+PRODUCT_COPY_FILES += \
+    vendor/kcuf/prebuilt/common/etc/apns-conf.xml:system/etc/apns-conf.xml
