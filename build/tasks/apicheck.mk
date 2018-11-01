@@ -18,75 +18,75 @@
 #
 
 # skip api check for PDK buid
-ifeq (,$(filter true, $(WITHOUT_CHECK_API) $(TARGET_BUILD_PDK) $(TARGET_DISABLE_LINEAGE_SDK)))
+ifeq (,$(filter true, $(WITHOUT_CHECK_API) $(TARGET_BUILD_PDK) $(TARGET_DISABLE_KCUF_SDK)))
 
-.PHONY: checkapi-lineage
+.PHONY: checkapi-kcuf
 
 # Run the checkapi rules by default.
-droidcore: checkapi-lineage
+droidcore: checkapi-kcuf
 
 # Validate against previous release platform sdk version api text within prebuilts
-lineage_last_released_sdk_version := $(LINEAGE_PLATFORM_SDK_VERSION)
+kcuf_last_released_sdk_version := $(KCUF_PLATFORM_SDK_VERSION)
 
-.PHONY: check-lineage-public-api
-checkapi-lineage : check-lineage-public-api
+.PHONY: check-kcuf-public-api
+checkapi-kcuf : check-kcuf-public-api
 
-.PHONY: update-lineage-api
+.PHONY: update-kcuf-api
 
-# INTERNAL_LINEAGE_PLATFORM_API_FILE is the one build by droiddoc.
-# Note that since INTERNAL_LINEAGE_PLATFORM_API_FILE  is the byproduct of api-stubs module,
-# (See lineage-sdk/Android.mk)
+# INTERNAL_KCUF_PLATFORM_API_FILE is the one build by droiddoc.
+# Note that since INTERNAL_KCUF_PLATFORM_API_FILE  is the byproduct of api-stubs module,
+# (See kcuf-sdk/Android.mk)
 # we need to add api-stubs as additional dependency of the api check.
 
-$(INTERNAL_LINEAGE_PLATFORM_API_FILE): lineage-api-stubs-docs
+$(INTERNAL_KCUF_PLATFORM_API_FILE): kcuf-api-stubs-docs
 
 # Check that the API we're building hasn't broken the last-released
 # SDK version.
 $(eval $(call check-api, \
-    checkpublicapi-lineage-last, \
-    $(LINEAGE_SRC_API_DIR)/$(lineage_last_released_sdk_version).txt, \
-    $(INTERNAL_LINEAGE_PLATFORM_API_FILE), \
-    $(FRAMEWORK_LINEAGE_PLATFORM_REMOVED_API_FILE), \
-    $(INTERNAL_LINEAGE_PLATFORM_REMOVED_API_FILE), \
+    checkpublicapi-kcuf-last, \
+    $(KCUF_SRC_API_DIR)/$(kcuf_last_released_sdk_version).txt, \
+    $(INTERNAL_KCUF_PLATFORM_API_FILE), \
+    $(FRAMEWORK_KCUF_PLATFORM_REMOVED_API_FILE), \
+    $(INTERNAL_KCUF_PLATFORM_REMOVED_API_FILE), \
     -hide 2 -hide 3 -hide 4 -hide 5 -hide 6 -hide 24 -hide 25 -hide 26 -hide 27 \
     -error 7 -error 8 -error 9 -error 10 -error 11 -error 12 -error 13 -error 14 -error 15 \
     -error 16 -error 17 -error 18 , \
-    cat $(FRAMEWORK_LINEAGE_API_NEEDS_UPDATE_TEXT), \
-    check-lineage-public-api, \
-    $(call doc-timestamp-for,lineage-api-stubs) \
+    cat $(FRAMEWORK_KCUF_API_NEEDS_UPDATE_TEXT), \
+    check-kcuf-public-api, \
+    $(call doc-timestamp-for,kcuf-api-stubs) \
     ))
 
 # Check that the API we're building hasn't changed from the not-yet-released
 # SDK version.
 $(eval $(call check-api, \
-    checkpublicapi-lineage-current, \
-    $(FRAMEWORK_LINEAGE_PLATFORM_API_FILE), \
-    $(INTERNAL_LINEAGE_PLATFORM_API_FILE), \
-    $(FRAMEWORK_LINEAGE_PLATFORM_REMOVED_API_FILE), \
-    $(INTERNAL_LINEAGE_PLATFORM_REMOVED_API_FILE), \
+    checkpublicapi-kcuf-current, \
+    $(FRAMEWORK_KCUF_PLATFORM_API_FILE), \
+    $(INTERNAL_KCUF_PLATFORM_API_FILE), \
+    $(FRAMEWORK_KCUF_PLATFORM_REMOVED_API_FILE), \
+    $(INTERNAL_KCUF_PLATFORM_REMOVED_API_FILE), \
     -error 2 -error 3 -error 4 -error 5 -error 6 \
     -error 7 -error 8 -error 9 -error 10 -error 11 -error 12 -error 13 -error 14 -error 15 \
     -error 16 -error 17 -error 18 -error 19 -error 20 -error 21 -error 23 -error 24 \
     -error 25 -error 26 -error 27, \
-    cat $(FRAMEWORK_LINEAGE_API_NEEDS_UPDATE_TEXT), \
-    check-lineage-public-api, \
-    $(call doc-timestamp-for,lineage-api-stubs) \
+    cat $(FRAMEWORK_KCUF_API_NEEDS_UPDATE_TEXT), \
+    check-kcuf-public-api, \
+    $(call doc-timestamp-for,kcuf-api-stubs) \
     ))
 
-.PHONY: update-lineage-public-api
-update-lineage-public-api: $(INTERNAL_LINEAGE_PLATFORM_API_FILE) | $(ACP)
-	@echo "Copying lineage_current.txt"
-	$(hide) $(ACP) $(INTERNAL_LINEAGE_PLATFORM_API_FILE) $(FRAMEWORK_LINEAGE_PLATFORM_API_FILE)
-	@echo "Copying lineage_removed.txt"
-	$(hide) $(ACP) $(INTERNAL_LINEAGE_PLATFORM_REMOVED_API_FILE) $(FRAMEWORK_LINEAGE_PLATFORM_REMOVED_API_FILE)
+.PHONY: update-kcuf-public-api
+update-kcuf-public-api: $(INTERNAL_KCUF_PLATFORM_API_FILE) | $(ACP)
+	@echo "Copying kcuf_current.txt"
+	$(hide) $(ACP) $(INTERNAL_KCUF_PLATFORM_API_FILE) $(FRAMEWORK_KCUF_PLATFORM_API_FILE)
+	@echo "Copying kcuf_removed.txt"
+	$(hide) $(ACP) $(INTERNAL_KCUF_PLATFORM_REMOVED_API_FILE) $(FRAMEWORK_KCUF_PLATFORM_REMOVED_API_FILE)
 
-update-lineage-api : update-lineage-public-api
+update-kcuf-api : update-kcuf-public-api
 
-.PHONY: update-lineage-prebuilts-latest-public-api
-current_sdk_release_text_file := $(LINEAGE_SRC_API_DIR)/$(lineage_last_released_sdk_version).txt
+.PHONY: update-kcuf-prebuilts-latest-public-api
+current_sdk_release_text_file := $(KCUF_SRC_API_DIR)/$(kcuf_last_released_sdk_version).txt
 
-update-lineage-prebuilts-latest-public-api: $(FRAMEWORK_LINEAGE_PLATFORM_API_FILE) | $(ACP)
-	@echo "Publishing lineage_current.txt as latest API release"
-	$(hide) $(ACP) $(FRAMEWORK_LINEAGE_PLATFORM_API_FILE) $(current_sdk_release_text_file)
+update-kcuf-prebuilts-latest-public-api: $(FRAMEWORK_KCUF_PLATFORM_API_FILE) | $(ACP)
+	@echo "Publishing kcuf_current.txt as latest API release"
+	$(hide) $(ACP) $(FRAMEWORK_KCUF_PLATFORM_API_FILE) $(current_sdk_release_text_file)
 
 endif

@@ -1,2 +1,2 @@
-# Include LineageOS versions
-include $(TOPDIR)vendor/lineage/build/core/main_version.mk
+# Include KCUFRom versions
+include $(TOPDIR)vendor/kcuf/build/core/main_version.mk
