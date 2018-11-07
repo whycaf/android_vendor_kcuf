@@ -15,22 +15,22 @@
 
 KCUF_MOD_VERSION = 9.0
 
-ifeq ($(KCUF_BETA),true)
-    KCUF_BUILD_TYPE := BETA
+ifndef KCUF_BUILD_TYPE
+    KCUF_BUILD_TYPE := UNOFFICIAL
 endif
 
 CURRENT_DEVICE=$(shell echo "$(TARGET_PRODUCT)" | cut -d'_' -f 2,3)
 
-LIST = $(shell curl -s https://raw.githubusercontent.com/KCUFRom/android_vendor_kcuf/p/kcuf.devices)
-FOUND_DEVICE =  $(filter $(CURRENT_DEVICE), $(LIST))
-ifeq ($(FOUND_DEVICE),$(CURRENT_DEVICE))
-    IS_OFFICIAL=true
-    KCUF_BUILD_TYPE := OFFICIAL
-else
-    KCUF_BUILD_TYPE := UNOFFICIAL
+ifeq ($(KCUF_BUILD_TYPE), OFFICIAL)
+    LIST = $(shell curl -s https://raw.githubusercontent.com/KCUFRom/android_vendor_kcuf/p/kcuf.devices)
+    FOUND_DEVICE =  $(filter $(CURRENT_DEVICE), $(LIST))
+    ifneq ($(FOUND_DEVICE), $(CURRENT_DEVICE))
+        KCUF_BUILD_TYPE := UNOFFICIAL
+        $(error $(CURRENT_DEVICE) is not an Official Device)
+    endif
 endif
 
-KCUF_VERSION := KCUFRom-$(KCUF_MOD_VERSION)-$(CURRENT_DEVICE)-$(KCUF_BUILD_TYPE)-$(shell date -u +%Y%m%d)
+KCUF_VERSION := $(KCUF_MOD_VERSION)-$(CURRENT_DEVICE)-$(KCUF_BUILD_TYPE)-$(shell date -u +%Y%m%d)
 
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
   ro.kcuf.version=$(KCUF_VERSION) \
